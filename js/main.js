@@ -39,13 +39,46 @@ class tomarFoto{
         })
         let res = await envio.text()
         console.log(res)
-        alert("ok")
+    }
+}
+
+class enviarData{
+
+    constructor(form){
+        this.form = form
+    }
+
+    async enviarUrl(){
+        loader.classList.remove("hidden")
+        let formdata = new FormData()
+        formdata.append('url', this.form)
+        let config =  {
+            method: 'POST',
+            body: formdata
+        }
+        const res = await fetch('modulos/obtenerVideo.php', config)
+        const data = await res.json()
+        loader.classList.add("hidden")
+        this.pintarDatos(data)
+    }
+    pintarDatos(datos){
+        card.classList.remove("hidden")
+        imageny.src = datos["data"].thumbnail
+        tituloy.innerHTML = datos["data"].fulltitle
+        descargay.href = datos["descarga"]
     }
 }
 
 
-start.addEventListener("click", (e) => {
+
+let envio = new enviarData(url.value)
+search.addEventListener("click", (e) => {
     e.preventDefault()
-    let miCamara = new tomarFoto(video, canvaa, btn)
-    miCamara.encenderCamara()
+    envio.enviarUrl()
 })
+
+//start.addEventListener("click", (e) => {
+//    e.preventDefault()
+//    let miCamara = new tomarFoto(video, canvaa, btn)
+//    miCamara.encenderCamara()
+//})
